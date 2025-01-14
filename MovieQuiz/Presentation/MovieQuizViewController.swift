@@ -3,6 +3,12 @@ import UIKit
 final class MovieQuizViewController: UIViewController {
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
+    private var isReadyToAnswer = false {
+        didSet {
+            yesButton.isEnabled = isReadyToAnswer
+            noButton.isEnabled = isReadyToAnswer
+        }
+    }
 
     private let questions: [QuizQuestion] = [
         QuizQuestion(
@@ -50,6 +56,8 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var yesButton: UIButton!
+    @IBOutlet private weak var noButton: UIButton!
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -71,14 +79,17 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.borderWidth = 0
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
+        isReadyToAnswer = true
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        isReadyToAnswer = false
         let result = validate(userAnswer: true)
         showAnswerResult(isCorrect: result)
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
+        isReadyToAnswer = false
         let result = validate(userAnswer: false)
         showAnswerResult(isCorrect: result)
     }
