@@ -50,7 +50,7 @@ final class StatisticService: StatisticServiceProtocol {
     }
 
     var totalAccuracy: Double {
-        return Double(correctAnswers) / Double(10 * gamesCount) * 100
+        Double(correctAnswers) / Double(10 * gamesCount) * 100
     }
 
     func store(correct count: Int, total amount: Int) {

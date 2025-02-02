@@ -6,7 +6,7 @@ final class MovieQuizViewController: UIViewController {
     private var currentQuestionIndex: Int = 0
     private let questionsAmount: Int = 10
     private var isGameFinished: Bool {
-        return currentQuestionIndex == questionsAmount
+        currentQuestionIndex == questionsAmount
     }
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
@@ -71,14 +71,14 @@ final class MovieQuizViewController: UIViewController {
         if isGameFinished {
             statisticService.store(correct: correctAnswers, total: questionsAmount)
             
-            let alertModel = getEndGameAllertModel()
+            let alertModel = getEndGameAlertModel()
             alertPresenter?.show(alertModel: alertModel)
         } else {
             questionFactory?.requestNextQuestion()
         }
     }
     
-    private func getEndGameAllertModel() -> AlertModel {
+    private func getEndGameAlertModel() -> AlertModel {
         let totalGames = statisticService.gamesCount
         let bestGame = statisticService.bestGame
         let accuracy = statisticService.totalAccuracy
@@ -120,7 +120,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         return QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(named: model.imageName) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex)/\(questionsAmount)"
         )
