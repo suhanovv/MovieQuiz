@@ -150,7 +150,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         return QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
+            image: UIImage(data: model.imageData) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex)/\(questionsAmount)"
         )
@@ -163,7 +163,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         counterLabel.text = step.questionNumber
     }
     
-    // MARK: - Successfull loading questions
+    // MARK: - Successful loading questions
     func didLoadDataFromServer() {
         hideLoadingIndicator()
         resetRound()
@@ -181,7 +181,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
     }
     
     private func getErrorAlertModel(message: String) -> AlertModel {
-        return AlertModel(
+       AlertModel(
             title: "Ошибка",
             message: message,
             buttonText: "Повторить"
@@ -189,6 +189,25 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
             guard let self = self else { return }
             self.showLoadingIndicator()
             self.questionFactory?.loadData()
+        }
+    }
+    
+    func didFailToLoadFilmCover() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.hideLoadingIndicator()
+            let alertModel = AlertModel(
+                title: "Ошибка",
+                message: "Неудалось загрузить постер",
+                buttonText: "Следующий вопрос",
+                completion: { [weak self] in
+                    guard let self = self else { return }
+                    self.showLoadingIndicator()
+                    self.showNextQuestionOrResult()
+                }
+            )
+            self.alertPresenter?.show(alertModel: alertModel)
         }
     }
     

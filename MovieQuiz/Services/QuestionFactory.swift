@@ -59,16 +59,17 @@ final class QuestionFactory: QuestionFactoryProtocol {
         do {
             imageData = try Data(contentsOf: movie.resizedImageURL)
         } catch {
-            print("Failed to load image")
+            self.delegate?.didFailToLoadFilmCover()
         }
         
+        
         let rating = Float(movie.rating) ?? 0
-        let avgRating = self.getAvgMoviesRating()
+        let avgRating = getAvgMoviesRating()
         let text = "Рейтинг этого фильма больше чем \(String(format: "%0.1f", avgRating))?"
         let correctAnswer = rating > avgRating
         
         return QuizQuestion(
-            image: imageData,
+            imageData: imageData,
             text: text,
             correctAnswer: correctAnswer)
     }
